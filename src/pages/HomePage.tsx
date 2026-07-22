@@ -38,6 +38,12 @@ export default function HomePage() {
           to="/area-restrita"
           description="Padrão Context + useAuth + ProtectedRoute preparado para autenticação real."
         />
+        <HubCard
+          title="Tarefas"
+          badge="Organização de tarefas"
+          to="/exemplo-tarefas"
+          description="Lista com todas as tarefas feitas e a fazer, para organização e otimização"
+        />
       </section>
 
       <RestrictedLoginPanel />
