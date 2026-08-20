@@ -7,6 +7,7 @@ export interface Task{
     description: string;
     priority: Priority;
     status: TaskStatus;
+    phase: "A-fazer" | "Fazendo" | "Feito" | "Atrasada";
     deadline: Date;
     createdAt: Date;
     updatedAt: Date;
