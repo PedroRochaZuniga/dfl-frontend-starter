@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Priority } from "@/types/Priority";
-import { TaskStatus } from "@/types/TaskStatus";
+import { Priority } from "@/enums/Priority";
+import { TaskStatus } from "@/enums/TaskStatus";
 import {Task} from "src/types/Task";
 
 interface TaskProps{
@@ -9,7 +9,7 @@ interface TaskProps{
 
 
 export default function TaskCard({ task } : TaskProps){
-    const [phase, setPhase] = useState(task.phase);
+    const [status, setStatus] = useState(task.status);
     const [deleted, setDeleted] = useState(false);
 
     if (deleted) return null;
@@ -21,16 +21,16 @@ export default function TaskCard({ task } : TaskProps){
             <p className="text-sm text-gray-500">{task.description}</p>
             <p className="text-sm text-gray-500">Prioridade: {Priority[task.priority]}</p>
             <p className="text-sm text-gray-500">Prazo: {task.deadline.toLocaleDateString("pt-BR")}</p>
-            {phase === "A-fazer" && (<span className = "mt-2 inline-block rounded bg-yellow-100 px-2 py-0.5 text-xs text-yellow-600">A-fazer</span>)}
-            {phase === "Fazendo" && (<span className = "mt-2 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-600">Fazendo</span>)}
-            {phase === "Feito" && (<span className = "mt-2 inline-block rounded bg-green-100 px-2 py-0.5 text-xs text-green-600">Feito</span>)}
-            {phase === "Atrasada" && (<span className = "mt-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs text-red-600">Atrasada!</span>)}
+            {status === TaskStatus.Afazer && (<span className = "mt-2 inline-block rounded bg-yellow-100 px-2 py-0.5 text-xs text-yellow-600">A-fazer</span>)}
+            {status === TaskStatus.Fazendo && (<span className = "mt-2 inline-block rounded bg-blue-100 px-2 py-0.5 text-xs text-blue-600">Fazendo</span>)}
+            {status === TaskStatus.Concluida && (<span className = "mt-2 inline-block rounded bg-green-100 px-2 py-0.5 text-xs text-green-600">Feito</span>)}
+            {status === TaskStatus.Atrasada && (<span className = "mt-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs text-red-600">Atrasada!</span>)}
 
             
-            {phase != "Atrasada" && (<button className="flex items-center gap-2 mt-4 rounded bg-blue-600 px-3 py-2 text-sm text-white" onClick={() => setPhase("Feito")} disabled={phase === "Feito"}>{phase === "Feito"? "Concluida" : "Concluir task"}</button>)}
-            {phase === "Feito" && (<p className="mt-2 text-xs text-green-700"> Esta task já foi feita</p>)}
+            {status != TaskStatus.Atrasada && (<button className="flex items-center gap-2 mt-4 rounded bg-blue-600 px-3 py-2 text-sm text-white" onClick={() => setStatus(TaskStatus.Concluida)} disabled={status === TaskStatus.Concluida}>{status === TaskStatus.Concluida? "Concluída" : "Concluir task"}</button>)}
+            {status === TaskStatus.Concluida && (<p className="mt-2 text-xs text-green-700"> Esta task já foi concluída</p>)}
 
-            {phase === "Atrasada" && (<button className=" flex items-center gap-2 mt-4 rounded bg-blue-600 px-3 py-2 text-sm text-white" onClick={() => setDeleted(true)}>Excluir Task</button>)}
+            {status === TaskStatus.Atrasada && (<button className=" flex items-center gap-2 mt-4 rounded bg-blue-600 px-3 py-2 text-sm text-white" onClick={() => setDeleted(true)}>Excluir Task</button>)}
             
 
         </div>
