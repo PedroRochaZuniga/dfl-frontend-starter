@@ -7,28 +7,26 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 
-
-const delay = () => new Promise((resolve)=> setTimeout(resolve, 2000))
-
+function wait(ms: number){
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 export default function TaskPage(){
-const [task, setTask] = useState<Task[]>([]);
+const [tasks, setTask] = useState<Task[]>([]);
 const [isloading, setIsloading] = useState<boolean>(true);
 
-const loadTask = async() =>{
-    try{
+useEffect(() => {
+    async function loadTask(){
         setIsloading(true);
-        await delay();
-        setTask([...TaskData]);
-    } catch (error){
-        console.log(error)
-
-    }finally{
-        setIsloading(false)
-    }
-};
-
-useEffect(() => {void loadTask();},[]);
+        try{
+            await wait(2000);
+            setTask(TaskData);
+        } finally{
+            setIsloading(false);
+        }
+        }
+        loadTask();
+    },[]);
 
 return(
     <main className="space-y-4">
@@ -51,12 +49,8 @@ return(
                 <Loader2 className="h-4 w-4 animate-spin"/>
                 <p>Carregando...</p>
             </div>
-        ): task.length == 0? (
-            <div>
-                <p>Nenhuma tarefa encontrada!</p>
-            </div>
-        ): (
-            <TaskList task ={task}/>
+        ) : (
+          <TaskList tasks ={tasks}/>
         )}
     </main>
     );
