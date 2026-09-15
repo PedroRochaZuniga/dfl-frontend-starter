@@ -17,7 +17,7 @@ export default function TaskList({tasks}: TaskListProps){
       <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Lista de Tarefas</h2>
     
     <div className="grid gap-4 sm:grid-cols-2">
-        {tasks.map((task)=> (<TaskCard key={task.id} task ={task}/>))
+        {tasks.map((task)=> (<TaskCard key={task.id} task={task}/>))
         }
     </div>
     </div>

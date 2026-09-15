@@ -50,7 +50,7 @@ return(
                 <p>Carregando...</p>
             </div>
         ) : (
-          <TaskList tasks ={tasks}/>
+          <TaskList tasks={tasks}/>
         )}
     </main>
     );
