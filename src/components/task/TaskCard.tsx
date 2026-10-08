@@ -1,21 +1,22 @@
-import { useState } from "react";
 import { Priority } from "@/enums/Priority";
 import { TaskStatus } from "@/enums/TaskStatus";
 import {Task} from "src/types/Task";
+import { Button, formFieldClass } from "../ui";
+
 
 interface TaskProps{
     task: Task;
+    onChangeStatus: (task: Task, status: TaskStatus) => void;
+    onDelete: (id: string) => void;
+    isBusy?: boolean;
 }
 
 
-export default function TaskCard({ task } : TaskProps){
-    const [status, setStatus] = useState(task.status);
-    const [deleted, setDeleted] = useState(false);
-
-    if (deleted) return null;
+export default function TaskCard({ task, onChangeStatus, onDelete, isBusy } : TaskProps){
+    const {status} = task
 
     return(
-        <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+    <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-900">
       <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">
             Tarefa: {task.title}</h1>
             <p className="text-sm text-gray-500">{task.description}</p>
@@ -26,13 +27,25 @@ export default function TaskCard({ task } : TaskProps){
             {status === TaskStatus.Concluida && (<span className = "mt-2 inline-block rounded bg-green-100 px-2 py-0.5 text-xs text-green-600">Feito</span>)}
             {status === TaskStatus.Atrasada && (<span className = "mt-2 inline-block rounded bg-red-100 px-2 py-0.5 text-xs text-red-600">Atrasada!</span>)}
 
-            
-            {status != TaskStatus.Atrasada && (<button className="flex items-center gap-2 mt-4 rounded bg-blue-600 px-3 py-2 text-sm text-white" onClick={() => setStatus(TaskStatus.Concluida)} disabled={status === TaskStatus.Concluida}>{status === TaskStatus.Concluida? "Concluída" : "Concluir task"}</button>)}
-            {status === TaskStatus.Concluida && (<p className="mt-2 text-xs text-green-700"> Esta task já foi concluída</p>)}
-
-            {status === TaskStatus.Atrasada && (<button className=" flex items-center gap-2 mt-4 rounded bg-blue-600 px-3 py-2 text-sm text-white" onClick={() => setDeleted(true)}>Excluir Task</button>)}
-            
-
-        </div>
-    );
+            <div className="mt-4 flex flex-wrap items-center gap-2">
+                <label htmlFor={`status-${task.id}`} className="sr-only">
+                    Status da tarefa
+                </label>
+                <select
+                    id={`status-${task.id}`}
+                    value={status}
+                    disabled={isBusy}
+                    onChange={(e) => onChangeStatus(task, e.target.value as TaskStatus)}
+                    className={formFieldClass}>
+          
+                    {Object.values(TaskStatus).map((s) => (
+                    <option key={s} value={s}>
+                    {s}
+                    </option>
+                ))}
+                </select>
+                <Button type="button" size="sm" variant="danger" disabled={isBusy} onClick={() => onDelete(task.id)}>Excluir</Button>
+            </div>
+    </div>
+  );
 }

@@ -1,32 +1,25 @@
 import TaskList from "@/components/task/TaskList";
 import { Button } from "@/components/ui/Button";
-import { TaskData } from "@/test-utils/task.dummy";
 import { Task } from "@/types/Task";
-import { ArrowLeftIcon, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ArrowLeftIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTasks } from "@/hooks/useTask";
+import { TaskStatus } from "@/enums/TaskStatus";
+import { ErrorState, LoadingState } from "@/components/ui";
 
-
-function wait(ms: number){
-    return new Promise((resolve) => setTimeout(resolve, ms))
-}
 
 export default function TaskPage(){
-const [tasks, setTask] = useState<Task[]>([]);
-const [isloading, setIsloading] = useState<boolean>(true);
+const {tasks, isLoading, error, isMutating, update, remove, reload} = useTasks();
 
-useEffect(() => {
-    async function loadTask(){
-        setIsloading(true);
-        try{
-            await wait(2000);
-            setTask(TaskData);
-        } finally{
-            setIsloading(false);
-        }
-        }
-        loadTask();
-    },[]);
+const handleChangeStatus = async (task: Task, status: TaskStatus) =>{
+    if(task.status === status) return;
+    await update(task.id, {status});
+};
+
+const handleDelete = async (id: string) => {
+    if (!confirm("Excluir esta tarefa?")) return;
+    await remove(id);
+  };
 
 return(
     <main className="space-y-4">
@@ -44,14 +37,14 @@ return(
         Lista das tarefas listadas
         </p>
 
-        {isloading ? (
-            <div className="flex items-center gap-2 text-gray">
-                <Loader2 className="h-4 w-4 animate-spin"/>
-                <p>Carregando...</p>
-            </div>
-        ) : (
-          <TaskList tasks={tasks}/>
-        )}
+        {isLoading && <LoadingState message="Carregando tarefas..."/>}
+        {error && <ErrorState message={error} onRetry={() => void reload()} />}
+        {!isLoading && !error && (
+            <TaskList
+                tasks = {tasks}
+                onChangeStatus ={handleChangeStatus}
+                onDelete = {handleDelete}
+                isBusy = {isMutating}/>)}
     </main>
     );
 }
