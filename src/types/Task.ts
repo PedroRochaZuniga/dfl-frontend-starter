@@ -11,3 +11,15 @@ export interface Task{
     createdAt: Date;
     updatedAt: Date;
 }
+
+
+export interface CreateTaskDto {
+  title: string;
+  description: string;
+  priority: Priority;
+  status: TaskStatus;
+  deadline: Date;
+}
+
+export type UpdateTaskDto = Partial<CreateTaskDto>;
+
