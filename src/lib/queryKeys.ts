@@ -11,4 +11,7 @@ export const queryKeys = {
   suppliers: {
     all: ["suppliers"] as const,
   },
+  tasks: {
+    all: ["tasks"] as const,
+  },
 } as const;
