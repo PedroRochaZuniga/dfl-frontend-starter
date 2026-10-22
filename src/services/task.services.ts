@@ -2,7 +2,7 @@ import { CreateTaskDto, UpdateTaskDto, Task } from "@/types/Task";
 import { TaskData } from "@/test-utils/task.dummy";
 
 
-const delay = () => new Promise((resolve) => setTimeout(resolve, 200));
+const delay = () => new Promise((resolve) => setTimeout(resolve, 1500));
 
 export async function getTasks(): Promise<Task[]> {
   await delay();
